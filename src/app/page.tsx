@@ -2,33 +2,55 @@
 import { revalidatePath } from 'next/cache';
 import styles from './page.module.css'
 
-
-
-
 interface iCopyPasty {
-  code: number;
+  code: string;
   text: string;
 }
 
-function generateRandomNumber(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 const copyPastyList: iCopyPasty[] = []
+let textFound: string;
+
+function generateRandomCode(length: number) {
+  let code = "";
+  const characters = "abcdefghijklmnopqrstuvwxyz";
+  const charactersLength = characters.length;
+
+  for (let i = 0; i < length; i++) {
+    code += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return code;
+}
 
 export default function Home() {
 
-async function saveNewCopyPasty(data: FormData){
-  "use server";
-  const newCode = generateRandomNumber(1000, 9999);
-  const copyPasty = data.get("textToCopy") as string;
+  async function saveNewCopyPasty(data: FormData){
+    "use server";
+    const newCode = generateRandomCode(2);
+    const copyPasty = data.get("textToCopy") as string;
+    
+    copyPastyList.push({
+      text: copyPasty,
+      code: newCode
+    });
+    revalidatePath("/");
+  }
   
-  copyPastyList.push({
-    text: copyPasty,
-    code: newCode
-  });
+
+async function searchText(data: FormData){
+  "use server"
+  const codeInputed = data.get("codeInputed");
+
+  const foundCopyPasty = copyPastyList.find(
+    (item) => item.code.toString() === codeInputed
+  );
+
+  console.log("found ",foundCopyPasty)
+  if (foundCopyPasty) {
+    textFound = foundCopyPasty.text;
+  } else {
+    textFound = "no existe ningun copyPasty relacionado a ese code"
+  }
   revalidatePath("/");
-  
 }
 
   return (
@@ -48,10 +70,10 @@ async function saveNewCopyPasty(data: FormData){
           <button type='submit'>Generate Code</button>
         </form>
 
-        <form>
+        <form action={searchText}>
           <p>Code</p>
-          <input name='codeToGet' type='number'/>
-          <button type='submit'>Get text</button>
+          <input name='codeInputed' type='text'/>
+          <button type='submit'>get Text</button>
         </form>
 
         <div style={{margin: "50px"}}>
@@ -68,6 +90,11 @@ async function saveNewCopyPasty(data: FormData){
           </div>
         )}
         </div>
+
+        <div style={{ margin: "50px" }}>
+          {textFound && <p>{textFound}</p>}
+        </div>
+
       </section>
     </main>
   )
