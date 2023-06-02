@@ -60,8 +60,7 @@ export default function Home() {
           className={styles.textForm}
           onSubmit={handleSubmit}>
           <p>Text</p>
-          <input
-            type="text"
+          <textarea
             name="textToCopy"
             value={textToCopy}
             onChange={e => setTextToCopy(e.target.value)}
