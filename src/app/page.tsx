@@ -39,7 +39,7 @@ export default function Home() {
       // Reset savedCode to null after 5 seconds
   setTimeout(() => {
     setSavedCode(null);
-  }, 5000);
+  }, 10000);
   }
 
   async function handleFetch(e: React.FormEvent<HTMLFormElement>) {
@@ -63,7 +63,7 @@ export default function Home() {
         <form
           className={styles.textForm}
           onSubmit={handleSubmit}>
-          <p>Text</p>
+          <p>Text here</p>
           <textarea
             name="textToCopy"
             value={textToCopy}
@@ -85,7 +85,7 @@ export default function Home() {
         <form
           className={styles.codeForm}
           onSubmit={handleFetch}>
-          <p>Code to Fetch</p>
+          <p>The secret code here</p>
           <input
             type="digits"
             name="codeToFetch"
