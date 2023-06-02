@@ -12,8 +12,8 @@ import { useState } from "react"
 export default function Home() {
   const [textToCopy, setTextToCopy] = useState("")
   const [codeToFetch, setCodeToFetch] = useState("")
-  const [fetchedEntry, setFetchedEntry] = useState<string | null>(null)
-  const [savedCode, setSavedCode] = useState<string | null>(null)
+  const [fetchedEntry, setFetchedEntry] = useState<string>('null')
+  const [savedCode, setSavedCode] = useState<string>('')
   const [isSaving, setIsSaving] = useState(false)
   const [copiedText, setCopiedText] = useState('');
   const docRef = doc(db, "copypastis_Collection", "copyPastis_Doc")
@@ -45,7 +45,7 @@ export default function Home() {
     setIsSaving(false)
       // Reset savedCode to null after 5 seconds
   setTimeout(() => {
-    setSavedCode(null);
+    setSavedCode('');
   }, 10000);
   }
 
@@ -56,7 +56,7 @@ export default function Home() {
 
     if (docSnapshot.exists()) {
       const fetchedData = docSnapshot.data() as Entry
-      const fetchedEntry = fetchedData[codeToFetch] || null
+      const fetchedEntry = fetchedData[codeToFetch]
       setFetchedEntry(fetchedEntry)
     }
   }
