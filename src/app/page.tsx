@@ -2,44 +2,20 @@
 
 import styles from "./page.module.css"
 
-import { initializeApp } from "firebase/app"
-import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+import {generateRandomCode} from "../utils/generateRandomCode";
+import {Entry} from "../interfaces/types";
+import db from '../db/firebase';
+
+
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useState } from "react";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBrTXD0aImX6tdIPl7LhoTUcvDE5J_r40s",
-  authDomain: "sidepro-385422.firebaseapp.com",
-  projectId: "sidepro-385422",
-  storageBucket: "sidepro-385422.appspot.com",
-  messagingSenderId: "80631964465",
-  appId: "1:80631964465:web:19dcd01fb5d6bdbb460610",
-  measurementId: "G-EJWB3NN0S6",
-}
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-type Entry = {
-  [key: string]: string;
-};
-
-function generateRandomCode(length: number): string {
-  let code = '';
-  const characters = '123456789';
-  const charactersLength = characters.length;
-
-  for (let i = 0; i < length; i++) {
-    code += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return code;
-}
 
 export default function Home() {
   const [textToCopy, setTextToCopy] = useState('');
   const [codeToFetch, setCodeToFetch] = useState('');
   const [fetchedEntry, setFetchedEntry] = useState<string | null>(null);
   const [savedCode, setSavedCode] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false); // New state variable
+  const [isSaving, setIsSaving] = useState(false);
   const docRef = doc(db, 'copypastis_Collection', 'copyPastis_Doc');
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -47,7 +23,7 @@ export default function Home() {
 
     setIsSaving(true); // Start the saving state
 
-    // Fetch the existing document data
+    // Fetch the existing document data or creates a new one
     const docSnapshot = await getDoc(docRef);
     const existingData = docSnapshot.exists() ? docSnapshot.data() : {};
 
