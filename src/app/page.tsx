@@ -12,7 +12,7 @@ import { useState } from "react"
 export default function Home() {
   const [textToCopy, setTextToCopy] = useState("")
   const [codeToFetch, setCodeToFetch] = useState("")
-  const [fetchedEntry, setFetchedEntry] = useState<string>('null')
+  const [fetchedEntry, setFetchedEntry] = useState<string>('')
   const [savedCode, setSavedCode] = useState<string>('')
   const [isSaving, setIsSaving] = useState(false)
   const [copiedText, setCopiedText] = useState('');
@@ -105,7 +105,7 @@ export default function Home() {
           />
           <button type="submit">Ver mensaje</button>
         </form>
-        {fetchedEntry && (
+        {fetchedEntry !== '' && (
           <div style={{wordBreak: 'break-all'}}>
             <button onClick={handleCopyClick}>Copy</button>
             <p>El mensaje es: {fetchedEntry}</p>
