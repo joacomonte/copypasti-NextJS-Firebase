@@ -2,6 +2,9 @@
 
 Copy-Pasty is a lightweight web application that allows you to easily copy and paste text snippets between different devices without the need for login. It leverages Firebase for seamless data storage and retrieval.
 
+# The Link
+https://copypasty-ten.vercel.app
+
 ## Features
 
 - **Firebase Integration**: Utilizes Firebase's Firestore database for efficient and reliable data management.
