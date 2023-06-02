@@ -57,7 +57,7 @@ export default function Home() {
         <h1>Copy-Pasty</h1>
       </section>
       <section className={styles.card}>
-        <form onSubmit={handleSubmit}>
+        <form className={styles.textForm} onSubmit={handleSubmit}>
           <p>Text</p>
           <input
             type="text"
@@ -74,10 +74,10 @@ export default function Home() {
             <p>{savedCode}</p>
           </div>
         )}
-        <form onSubmit={handleFetch}>
+        <form className={styles.codeForm} onSubmit={handleFetch}>
           <p>Code to Fetch</p>
           <input
-            type="number"
+            type="digit"
             name="codeToFetch"
             value={codeToFetch}
             onChange={(e) => setCodeToFetch(e.target.value)}
