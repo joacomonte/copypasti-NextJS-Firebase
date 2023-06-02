@@ -2,52 +2,51 @@
 
 import styles from "./page.module.css"
 
-import {generateRandomCode} from "../utils/generateRandomCode";
-import {Entry} from "../interfaces/types";
-import db from '../db/firebase';
+import { generateRandomCode } from "../utils/generateRandomCode"
+import { Entry } from "../interfaces/types"
+import db from "../db/firebase"
 
-
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { useState } from "react";
+import { doc, setDoc, getDoc } from "firebase/firestore"
+import { useState } from "react"
 
 export default function Home() {
-  const [textToCopy, setTextToCopy] = useState('');
-  const [codeToFetch, setCodeToFetch] = useState('');
-  const [fetchedEntry, setFetchedEntry] = useState<string | null>(null);
-  const [savedCode, setSavedCode] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const docRef = doc(db, 'copypastis_Collection', 'copyPastis_Doc');
+  const [textToCopy, setTextToCopy] = useState("")
+  const [codeToFetch, setCodeToFetch] = useState("")
+  const [fetchedEntry, setFetchedEntry] = useState<string | null>(null)
+  const [savedCode, setSavedCode] = useState<string | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const docRef = doc(db, "copypastis_Collection", "copyPastis_Doc")
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+    e.preventDefault()
 
-    setIsSaving(true); // Start the saving state
+    setIsSaving(true) // Start the saving state
 
     // Fetch the existing document data or creates a new one
-    const docSnapshot = await getDoc(docRef);
-    const existingData = docSnapshot.exists() ? docSnapshot.data() : {};
+    const docSnapshot = await getDoc(docRef)
+    const existingData = docSnapshot.exists() ? docSnapshot.data() : {}
 
     // Generate a random code and save the text
-    const newCode = generateRandomCode(3);
+    const newCode = generateRandomCode(3)
     await setDoc(docRef, {
       ...existingData,
       [newCode]: textToCopy,
-    });
+    })
 
     // Set the saved code and stop the saving state
-    setSavedCode(newCode);
-    setIsSaving(false);
+    setSavedCode(newCode)
+    setIsSaving(false)
   }
 
   async function handleFetch(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+    e.preventDefault()
 
-    const docSnapshot = await getDoc(docRef);
+    const docSnapshot = await getDoc(docRef)
 
     if (docSnapshot.exists()) {
-      const fetchedData = docSnapshot.data() as Entry;
-      const fetchedEntry = fetchedData[codeToFetch] || null;
-      setFetchedEntry(fetchedEntry);
+      const fetchedData = docSnapshot.data() as Entry
+      const fetchedEntry = fetchedData[codeToFetch] || null
+      setFetchedEntry(fetchedEntry)
     }
   }
 
@@ -57,15 +56,21 @@ export default function Home() {
         <h1>Copy-Pasty</h1>
       </section>
       <section className={styles.card}>
-        <form className={styles.textForm} onSubmit={handleSubmit}>
+        <form
+          className={styles.textForm}
+          onSubmit={handleSubmit}>
           <p>Text</p>
           <input
             type="text"
             name="textToCopy"
             value={textToCopy}
-            onChange={(e) => setTextToCopy(e.target.value)}
+            onChange={e => setTextToCopy(e.target.value)}
           />
-          <button type="submit" disabled={isSaving}>Save</button>
+          <button
+            type="submit"
+            disabled={isSaving}>
+            Save
+          </button>
           {isSaving && <p>Loading...</p>}
         </form>
         {savedCode && (
@@ -74,13 +79,19 @@ export default function Home() {
             <p>{savedCode}</p>
           </div>
         )}
-        <form className={styles.codeForm} onSubmit={handleFetch}>
+        <form
+          className={styles.codeForm}
+          onSubmit={handleFetch}>
           <p>Code to Fetch</p>
           <input
-            type="digit"
+            type="digits"
             name="codeToFetch"
             value={codeToFetch}
-            onChange={(e) => setCodeToFetch(e.target.value)}
+            onChange={e => {
+              if (e.target.value.length <= 3) {
+                setCodeToFetch(e.target.value)
+              }
+            }}
           />
           <button type="submit">Fetch</button>
         </form>
@@ -92,5 +103,5 @@ export default function Home() {
         )}
       </section>
     </main>
-  );
+  )
 }

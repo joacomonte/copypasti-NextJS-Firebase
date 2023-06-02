@@ -50,6 +50,7 @@
   border-radius: 5px;
   border: none;
   background-color: rgba(255, 255, 255, 0.2);
+  padding: 15px;
 }
 .textForm button {
   height: 30px;
@@ -69,11 +70,14 @@
 
 .codeForm input{
   height: 40px;
-  width: 120px;
+  width: 90px;
   border-radius: 5px;
   border: none;
   background-color: rgba(255, 255, 255, 0.2);
+  padding: 6px 18px;
+  font-size: 30px;
 }
+
 .codeForm button {
   height: 30px;
   width: 60px;
