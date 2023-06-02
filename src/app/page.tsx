@@ -77,7 +77,7 @@ export default function Home() {
         <form onSubmit={handleFetch}>
           <p>Code to Fetch</p>
           <input
-            type="text"
+            type="number"
             name="codeToFetch"
             value={codeToFetch}
             onChange={(e) => setCodeToFetch(e.target.value)}
