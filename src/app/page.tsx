@@ -15,7 +15,14 @@ export default function Home() {
   const [fetchedEntry, setFetchedEntry] = useState<string | null>(null)
   const [savedCode, setSavedCode] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [copiedText, setCopiedText] = useState('');
   const docRef = doc(db, "copypastis_Collection", "copyPastis_Doc")
+
+
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(fetchedEntry);
+    setCopiedText(fetchedEntry);
+  };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -100,6 +107,7 @@ export default function Home() {
         </form>
         {fetchedEntry && (
           <div style={{wordBreak: 'break-all'}}>
+            <button onClick={handleCopyClick}>Copy</button>
             <p>El mensaje es: {fetchedEntry}</p>
           </div>
         )}
