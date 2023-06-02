@@ -92,12 +92,11 @@ export default function Home() {
               }
             }}
           />
-          <button type="submit">Fetch</button>
+          <button type="submit">Ver mensaje</button>
         </form>
         {fetchedEntry && (
-          <div>
-            <p>Fetched Entry:</p>
-            <p>{fetchedEntry}</p>
+          <div style={{wordBreak: 'break-all'}}>
+            <p>El mensaje es: {fetchedEntry}</p>
           </div>
         )}
       </section>

@@ -62,6 +62,8 @@
   border: none;
   color: black;
   font-size: 14px;
+  background-color: rgb(238, 238, 238);
+  cursor: pointer;
 }
 
 .codeForm{
@@ -79,13 +81,16 @@
   background-color: rgba(255, 255, 255, 0.2);
   padding: 6px 18px;
   font-size: 30px;
+
 }
 
 .codeForm button {
   height: 30px;
-  width: 60px;
+  width: 110px;
   border-radius: 5px;
   border: none;
   color: black;
   font-size: 14px;
+  background-color: rgb(238, 238, 238);
+  cursor: pointer;
 }
