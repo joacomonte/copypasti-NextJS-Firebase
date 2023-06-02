@@ -36,6 +36,10 @@ export default function Home() {
     // Set the saved code and stop the saving state
     setSavedCode(newCode)
     setIsSaving(false)
+      // Reset savedCode to null after 5 seconds
+  setTimeout(() => {
+    setSavedCode(null);
+  }, 5000);
   }
 
   async function handleFetch(e: React.FormEvent<HTMLFormElement>) {
