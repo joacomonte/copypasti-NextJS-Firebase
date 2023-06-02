@@ -1,18 +1,31 @@
+"use client"
 
-import { revalidatePath } from 'next/cache';
-import styles from './page.module.css'
+import styles from "./page.module.css"
 
-interface iCopyPasty {
-  code: string;
-  text: string;
+import { initializeApp } from "firebase/app"
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+import { useState } from "react";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBrTXD0aImX6tdIPl7LhoTUcvDE5J_r40s",
+  authDomain: "sidepro-385422.firebaseapp.com",
+  projectId: "sidepro-385422",
+  storageBucket: "sidepro-385422.appspot.com",
+  messagingSenderId: "80631964465",
+  appId: "1:80631964465:web:19dcd01fb5d6bdbb460610",
+  measurementId: "G-EJWB3NN0S6",
 }
 
-const copyPastyList: iCopyPasty[] = []
-let textFound: string;
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-function generateRandomCode(length: number) {
-  let code = "";
-  const characters = "abcdefghijklmnopqrstuvwxyz";
+type Entry = {
+  [key: string]: string;
+};
+
+function generateRandomCode(length: number): string {
+  let code = '';
+  const characters = '123456789';
   const charactersLength = characters.length;
 
   for (let i = 0; i < length; i++) {
@@ -22,80 +35,86 @@ function generateRandomCode(length: number) {
 }
 
 export default function Home() {
+  const [textToCopy, setTextToCopy] = useState('');
+  const [codeToFetch, setCodeToFetch] = useState('');
+  const [fetchedEntry, setFetchedEntry] = useState<string | null>(null);
+  const [savedCode, setSavedCode] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false); // New state variable
+  const docRef = doc(db, 'copypastis_Collection', 'copyPastis_Doc');
 
-  async function saveNewCopyPasty(data: FormData){
-    "use server";
-    const newCode = generateRandomCode(2);
-    const copyPasty = data.get("textToCopy") as string;
-    
-    copyPastyList.push({
-      text: copyPasty,
-      code: newCode
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    setIsSaving(true); // Start the saving state
+
+    // Fetch the existing document data
+    const docSnapshot = await getDoc(docRef);
+    const existingData = docSnapshot.exists() ? docSnapshot.data() : {};
+
+    // Generate a random code and save the text
+    const newCode = generateRandomCode(3);
+    await setDoc(docRef, {
+      ...existingData,
+      [newCode]: textToCopy,
     });
-    revalidatePath("/");
+
+    // Set the saved code and stop the saving state
+    setSavedCode(newCode);
+    setIsSaving(false);
   }
-  
 
-async function searchText(data: FormData){
-  "use server"
-  const codeInputed = data.get("codeInputed");
+  async function handleFetch(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
 
-  const foundCopyPasty = copyPastyList.find(
-    (item) => item.code.toString() === codeInputed
-  );
+    const docSnapshot = await getDoc(docRef);
 
-  console.log("found ",foundCopyPasty)
-  if (foundCopyPasty) {
-    textFound = foundCopyPasty.text;
-  } else {
-    textFound = "no existe ningun copyPasty relacionado a ese code"
+    if (docSnapshot.exists()) {
+      const fetchedData = docSnapshot.data() as Entry;
+      const fetchedEntry = fetchedData[codeToFetch] || null;
+      setFetchedEntry(fetchedEntry);
+    }
   }
-  revalidatePath("/");
-}
 
   return (
     <main className={styles.main}>
       <section className={styles.title}>
-        <h1>Copy-Pasty
-        </h1>
+        <h1>Copy-Pasty</h1>
       </section>
       <section className={styles.card}>
-
-        <form action={saveNewCopyPasty}>
+        <form onSubmit={handleSubmit}>
           <p>Text</p>
-          <input 
-            type='text-area'
-            name='textToCopy'
+          <input
+            type="text"
+            name="textToCopy"
+            value={textToCopy}
+            onChange={(e) => setTextToCopy(e.target.value)}
           />
-          <button type='submit'>Generate Code</button>
+          <button type="submit" disabled={isSaving}>Save</button>
+          {isSaving && <p>Loading...</p>}
         </form>
-
-        <form action={searchText}>
-          <p>Code</p>
-          <input name='codeInputed' type='text'/>
-          <button type='submit'>get Text</button>
-        </form>
-
-        <div style={{margin: "50px"}}>
-        {copyPastyList.length > 0 && (
+        {savedCode && (
           <div>
-            <ul>
-              {copyPastyList.length > 0 && (
-                <>
-                <h4>Your code is: </h4>
-                <p>Code: {copyPastyList[copyPastyList.length - 1].code}</p>
-                </>
-              )}
-            </ul>
+            <p>Saved Code:</p>
+            <p>{savedCode}</p>
           </div>
         )}
-        </div>
-
-        <div style={{ margin: "50px" }}>
-          {textFound && <p>{textFound}</p>}
-        </div>
-
+        <form onSubmit={handleFetch}>
+          <p>Code to Fetch</p>
+          <input
+            type="text"
+            name="codeToFetch"
+            value={codeToFetch}
+            onChange={(e) => setCodeToFetch(e.target.value)}
+          />
+          <button type="submit">Fetch</button>
+        </form>
+        {fetchedEntry && (
+          <div>
+            <p>Fetched Entry:</p>
+            <p>{fetchedEntry}</p>
+          </div>
+        )}
       </section>
     </main>
-  )
+  );
 }
