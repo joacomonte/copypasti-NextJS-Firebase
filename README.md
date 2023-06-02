@@ -12,5 +12,5 @@ Copy-Pasty is a lightweight web application that allows you to save and retrieve
 
 ## Technologies Used
 
-- React
+- NextJS (Latest version src/app/ structure)
 - Firebase
