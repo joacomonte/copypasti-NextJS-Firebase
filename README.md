@@ -1,6 +1,6 @@
 # Copy-Pasty
 
-Copy-Pasty is a lightweight web application that allows you to save and retrieve text snippets using unique codes. It leverages Firebase for seamless data storage and retrieval.
+Copy-Pasty is a lightweight web application that allows you to easily copy and paste text snippets between different devices without the need for login. It leverages Firebase for seamless data storage and retrieval.
 
 ## Features
 
@@ -10,7 +10,8 @@ Copy-Pasty is a lightweight web application that allows you to save and retrieve
 - **Text Retrieval**: Retrieve text snippets by entering their corresponding codes.
 - **User-friendly Interface**: Provides a clean and intuitive interface for a seamless user experience.
 
+
 ## Technologies Used
 
-- NextJS (Latest version src/app/ structure)
+- Next.js (Latest version src/app/ structure)
 - Firebase
