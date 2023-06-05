@@ -2,15 +2,16 @@
   width: 80vw;
   max-width: 500px;
   height: 80vh;
-  max-height: 700px;
+  max-height: 600px;
 
   border-radius: 30px;
 
   background-color: rgba(255, 255, 255, 0.05); /* Semi-transparent white */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
+
+  display: grid;
+  grid-template-rows: 1fr 1fr 2.3fr; /* Equal height rows */
+  justify-items: center; /* Center items horizontally */
+  align-items: start; /* Align items to the top */
 
   backdrop-filter: blur(6px); /* Adjust the blur strength as needed */
 }
@@ -21,15 +22,15 @@
   background: linear-gradient(to right, rgb(255, 251, 128), orange, rgb(255, 79, 79));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  margin: 50px 0;
 }
 
 
 .card {
   display: flex;
   flex-direction: column;
-  padding: 2rem 2rem;
-  /* background-color: rgba(255, 255, 255, 0.00); 
-  backdrop-filter: blur(10px);  */
+  padding: 0 2rem;
+
   border-radius: 20px;
   gap: 50px;
   width: 100%;
@@ -92,5 +93,74 @@
   color: black;
   font-size: 14px;
   background-color: rgb(238, 238, 238);
+  cursor: pointer;
+}
+
+.pillContainer{
+  position: relative;
+  width: 200px;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 50px;
+  box-shadow: rgba(82, 82, 82, 0.25) 0px 30px 60px -12px inset, 
+              rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+.pillContainer::before {
+  content: "";
+  position: absolute;
+  width: 1px;
+  height: 70%;
+  background-color: rgba(87, 87, 87, 0.255);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.pillButtonLeft{
+  font-size: 0.85em;
+  background-color: transparent;
+  backdrop-filter: blur(6px); /* Adjust the blur strength as needed */
+  border: none;
+  width: 95%;
+  height: 80%;
+  margin: 0 5px;
+  border-radius: 50px 0 0 50px ;
+  cursor: pointer;
+}
+.pillButtonLeft:hover{
+  background-color: rgba(0, 0, 0, 0.084);
+}
+.pillButtonRight{
+  font-size: 0.85em;
+  background-color: transparent;
+  backdrop-filter: blur(6px); /* Adjust the blur strength as needed */
+  border: none;
+  width: 95%;
+  height: 80%;
+  margin: 0 5px;
+  border-radius: 0 50px 50px 0 ;
+  cursor: pointer;
+}
+.pillButtonRightActive{
+  font-size: 0.85em;
+  background-color: rgba(255, 255, 255, 0.063);
+  backdrop-filter: blur(6px); /* Adjust the blur strength as needed */
+  border: none;
+  width: 95%;
+  height: 80%;
+  margin: 0 5px;
+  border-radius: 0 50px 50px 0 ;
+  cursor: pointer;
+}
+.pillButtonLeftActive{
+  font-size: 0.85em;
+  background-color: rgba(255, 255, 255, 0.063);
+  backdrop-filter: blur(6px); /* Adjust the blur strength as needed */
+  border: none;
+  width: 95%;
+  height: 80%;
+  margin: 0 5px;
+  border-radius: 50px 0 0 50px ;
   cursor: pointer;
 }

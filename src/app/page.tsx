@@ -8,21 +8,27 @@ import db from "../db/firebase"
 
 import { doc, setDoc, getDoc } from "firebase/firestore"
 import { useState } from "react"
+import { motion } from "framer-motion"
 
 export default function Home() {
+  const [activeButton, setActiveButton] = useState("text")
+
+  const handleClick = buttonName => {
+    setActiveButton(buttonName)
+  }
+
   const [textToCopy, setTextToCopy] = useState("")
   const [codeToFetch, setCodeToFetch] = useState("")
-  const [fetchedEntry, setFetchedEntry] = useState<string>('')
-  const [savedCode, setSavedCode] = useState<string>('')
+  const [fetchedEntry, setFetchedEntry] = useState<string>("")
+  const [savedCode, setSavedCode] = useState<string>("")
   const [isSaving, setIsSaving] = useState(false)
-  const [copiedText, setCopiedText] = useState('');
+  const [copiedText, setCopiedText] = useState("")
   const docRef = doc(db, "copypastis_Collection", "copyPastis_Doc")
 
-
   const handleCopyClick = () => {
-    navigator.clipboard.writeText(fetchedEntry);
-    setCopiedText(fetchedEntry);
-  };
+    navigator.clipboard.writeText(fetchedEntry)
+    setCopiedText(fetchedEntry)
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -43,10 +49,10 @@ export default function Home() {
     // Set the saved code and stop the saving state
     setSavedCode(newCode)
     setIsSaving(false)
-      // Reset savedCode to null after 5 seconds
-  setTimeout(() => {
-    setSavedCode('');
-  }, 10000);
+    // Reset savedCode to null after 5 seconds
+    setTimeout(() => {
+      setSavedCode("")
+    }, 10000)
   }
 
   async function handleFetch(e: React.FormEvent<HTMLFormElement>) {
@@ -63,55 +69,81 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
+
       <section className={styles.title}>
         <h1>Copy-Pasty</h1>
       </section>
-      <section className={styles.card}>
-        <form
-          className={styles.textForm}
-          onSubmit={handleSubmit}>
-          <p>Text here</p>
-          <textarea
-            name="textToCopy"
-            value={textToCopy}
-            onChange={e => setTextToCopy(e.target.value)}
-          />
-          <button
-            type="submit"
-            disabled={isSaving}>
-            Save
-          </button>
-          {isSaving && <p>Loading...</p>}
-        </form>
-        {savedCode && (
-          <div>
-            <p>Saved Code:</p>
-            <p>{savedCode}</p>
-          </div>
-        )}
-        <form
-          className={styles.codeForm}
-          onSubmit={handleFetch}>
-          <p>The secret code here</p>
-          <input
-            type="digits"
-            name="codeToFetch"
-            value={codeToFetch}
-            onChange={e => {
-              if (e.target.value.length <= 3) {
-                setCodeToFetch(e.target.value)
-              }
-            }}
-          />
-          <button type="submit">Ver mensaje</button>
-        </form>
-        {fetchedEntry !== '' && (
-          <div style={{wordBreak: 'break-all'}}>
-            <button onClick={handleCopyClick}>Copy</button>
-            <p>El mensaje es: {fetchedEntry}</p>
-          </div>
-        )}
-      </section>
+
+      <div className={styles.pillContainer}>
+        <motion.button
+          className={activeButton === "text" ? styles.pillButtonLeftActive : styles.pillButtonLeft}
+          onClick={() => handleClick("text")}
+          whileTap={{ scale: 0.9 }}>
+          Text
+        </motion.button>
+        <motion.button
+          className={activeButton === "code" ? styles.pillButtonRightActive : styles.pillButtonRight}
+          onClick={() => handleClick("code")}
+          whileTap={{ scale: 0.9 }}>
+          Code
+        </motion.button>
+      </div>
+      
+      <div className={styles.card}>
+        {activeButton === "text" ? (
+          <section>
+            <form
+              className={styles.textForm}
+              onSubmit={handleSubmit}>
+              <p>Text here</p>
+              <textarea
+                name="textToCopy"
+                value={textToCopy}
+                onChange={e => setTextToCopy(e.target.value)}
+              />
+              <button
+                type="submit"
+                disabled={isSaving}>
+                Save
+              </button>
+              {isSaving && <p>Loading...</p>}
+            </form>
+            {savedCode && (
+              <div>
+                <p>Saved Code:</p>
+                <p>{savedCode}</p>
+              </div>
+            )}
+          </section>
+        ) : null}
+
+        {activeButton === "code" ? (
+          <section>
+            <form
+              className={styles.codeForm}
+              onSubmit={handleFetch}>
+              <p>The secret code here</p>
+              <input
+                type="digits"
+                name="codeToFetch"
+                value={codeToFetch}
+                onChange={e => {
+                  if (e.target.value.length <= 3) {
+                    setCodeToFetch(e.target.value)
+                  }
+                }}
+              />
+              <button type="submit">Ver mensaje</button>
+            </form>
+            {fetchedEntry && (
+              <div style={{ wordBreak: "break-all" }}>
+                <button onClick={handleCopyClick}>Copy</button>
+                <p>El mensaje es: {fetchedEntry}</p>
+              </div>
+            )}
+          </section>
+        ) : null}
+      </div>
     </main>
   )
 }
