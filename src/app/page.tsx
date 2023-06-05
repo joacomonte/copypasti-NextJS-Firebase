@@ -7,13 +7,13 @@ import { Entry } from "../interfaces/types"
 import db from "../db/firebase"
 
 import { doc, setDoc, getDoc } from "firebase/firestore"
-import { useState } from "react"
+import { SetStateAction, useState } from "react"
 import { motion } from "framer-motion"
 
 export default function Home() {
   const [activeButton, setActiveButton] = useState("text")
 
-  const handleClick = buttonName => {
+  const handleClick = (buttonName: SetStateAction<string>) => {
     setActiveButton(buttonName)
   }
 
